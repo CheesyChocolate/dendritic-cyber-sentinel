@@ -25,7 +25,10 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+    "numpy>=1.24.4",
+    "pandas>=2.0.3",
+]
 
 [project.urls]
 Documentation = "https://github.com/CheesyChocolate/dendritic-cyber-sentinel#readme"
