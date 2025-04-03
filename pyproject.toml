@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dendritic-cyber-sentinel"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "CheesyChocolate", email = "dev@behnamlal.xyz" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = []
+
+[project.urls]
+Documentation = "https://github.com/CheesyChocolate/dendritic-cyber-sentinel#readme"
+Issues = "https://github.com/CheesyChocolate/dendritic-cyber-sentinel/issues"
+Source = "https://github.com/CheesyChocolate/dendritic-cyber-sentinel"
+
+[tool.hatch.version]
+path = "src/dendritic_cyber_sentinel/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/dendritic_cyber_sentinel tests}"
+
+[tool.coverage.run]
+source_pkgs = ["dendritic_cyber_sentinel", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/dendritic_cyber_sentinel/__about__.py",
+]
+
+[tool.coverage.paths]
+dendritic_cyber_sentinel = ["src/dendritic_cyber_sentinel", "*/dendritic-cyber-sentinel/src/dendritic_cyber_sentinel"]
+tests = ["tests", "*/dendritic-cyber-sentinel/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
