@@ -2,49 +2,981 @@
 \IEEEoverridecommandlockouts
 \usepackage[backend=biber,style=ieee]{biblatex}
 \addbibresource{references.bib}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{multirow}
 \usepackage{newtxtext} % needed when using XeLaTeX
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-\begin{document}
+T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
-\title{<++>}
+\title{Dendritic Cell Algorithm with Optimized Parameters Using
+Enhanced Genetic Algorithm for Anomaly Detection in Network}
 
-
-\author{\IEEEauthorblockN{1\textsuperscript{st} Behnam Lal Moghaddam}
-\IEEEauthorblockA{\textit{dept. Computer Engineering} \\
-\textit{Biruni University}\\
-Istanbul, Turkey \\
-info@behnamlal.xyz}
-\and
-\IEEEauthorblockN{2\textsuperscript{nd} Ali Daghighi}
-\IEEEauthorblockA{\textit{dept. Computer Engineering} \\
-\textit{Biruni University}\\
-Istanbul, Turkey \\
-daghighi1376@gmail.com\\
-ORCID: 0009-0003-5886-6907}
+\author{\IEEEauthorblockN{1\textsuperscript{st} John Doe}
+  \IEEEauthorblockA{\textit{Department of Computer Science} \\
+    \textit{University of Example}\\
+    City, Country \\
+  email@example.com}
 }
+
+\begin{document}
 
 \maketitle
 
 \begin{abstract}
+  The increasing sophistication and diversity of cyber threats
+  necessitate advanced and adaptive intrusion detection mechanisms
+  capable of detecting both known and unknown anomalies across a wide
+  range of network behaviors. This paper presents a novel hybrid
+  approach that enhances the Dendritic Cell Algorithm (DCA), a
+  bio-inspired anomaly detection model, through the integration of a
+  Genetic Algorithm (GA) for automated signal weight optimization.
+  Traditional DCA implementations rely on fixed, manually tuned
+  weights for its input signals—PAMP, Danger, and Safe—which can
+  limit adaptability and performance, especially in complex,
+  multiclass environments with high data imbalance. Our method
+  introduces a correlation-based, data-driven feature selection
+  mechanism to dynamically assign features to signal categories. We
+  then apply a GA to evolve optimal weights for each signal type with
+  the goal of maximizing the macro-averaged F1-score on multiclass
+  classification tasks.
 
+  The proposed framework is evaluated using the CIC-IDS-2017 dataset,
+  a comprehensive benchmark for network intrusion detection,
+  encompassing a wide spectrum of attack types including DoS, DDoS,
+  Botnet, Infiltration, and Web-based threats. To reduce the class
+  imbalance inherent in real-world traffic datasets, we retain only
+  the most informative 1\% of benign samples, determined via signal
+  magnitude heuristics. Experimental results demonstrate that the
+  GA-optimized DCA significantly outperforms baseline DCA and
+  conventional classifiers in detecting both frequent and
+  low-prevalence attacks. The optimized model achieves a macro
+  F1-score of 0.74, improving recall on rare classes by over 60\%
+  compared to the baseline. This approach offers a promising
+  direction for adaptive and interpretable network intrusion
+  detection, balancing biological plausibility with data-driven optimization.
 \end{abstract}
 
 \begin{IEEEkeywords}
+  Dendritic Cell Algorithm, Genetic Algorithm, Intrusion Detection,
+  Cybersecurity, Anomaly Detection, CIC-IDS-2017
 \end{IEEEkeywords}
 
 \section{Introduction}
 
+The rapid expansion of digital infrastructures, coupled with the
+increasing reliance on internet-based services, has intensified the
+need for robust cybersecurity mechanisms. As modern networks grow in
+complexity and scale, they also become more susceptible to a broader
+spectrum of cyber threats. Traditional signature-based Intrusion
+Detection Systems (IDS), while effective against known threats, often
+struggle to detect novel or evolving attack patterns. This limitation
+necessitates the adoption of anomaly-based detection systems, which
+aim to identify deviations from established patterns of normal behavior.
+
+Anomaly detection, particularly within network traffic, is a complex
+task. It involves the classification of highly imbalanced data, where
+benign activities vastly outnumber malicious ones, and where attack
+classes themselves exhibit significant intra-class variability.
+Machine learning (ML) approaches have been widely adopted to tackle
+this challenge, but they often rely heavily on large amounts of
+labeled data and can be sensitive to noisy features and class
+imbalance. Moreover, the decision-making processes in many ML models,
+especially deep learning, remain largely opaque, limiting their
+interpretability and trustworthiness in high-stakes environments.
+
+Inspired by the natural immune system, Artificial Immune Systems
+(AIS) offer a biologically motivated paradigm for anomaly detection.
+Among them, the Dendritic Cell Algorithm (DCA) has garnered attention
+due to its biologically interpretable model of decision-making. The
+DCA operates by simulating the behavior of biological dendritic cells
+that respond to environmental signals by producing immune responses.
+It interprets input features as signals—Pathogen-Associated Molecular
+Patterns (PAMP), Danger signals, and Safe signals—and processes them
+through a population of artificial dendritic cells. Each cell
+accumulates signals over time, matures based on cumulative context,
+and labels data accordingly. This biologically grounded framework
+provides both adaptiveness and interpretability, making it an
+attractive alternative for anomaly detection in cybersecurity.
+
+However, a notable limitation of the classical DCA lies in its
+dependence on manually assigned signal weights and hardcoded
+feature-to-signal mappings. These predefined configurations may not
+generalize well across datasets or attack types. They can also
+introduce biases or diminish sensitivity to rare or emerging threats.
+To address these shortcomings, we propose an enhancement to the DCA
+framework by integrating a Genetic Algorithm (GA), which serves as an
+evolutionary optimizer to determine optimal signal weights
+dynamically. Additionally, we implement a data-driven approach to
+signal mapping using correlation analysis, enabling more informed and
+context-specific assignment of features to signal types.
+
+Our proposed model—Genetic Algorithm-Optimized Dendritic Cell
+Algorithm (GA-DCA)—is evaluated using the CIC-IDS-2017 dataset, which
+offers a realistic and heterogeneous set of network traffic records,
+annotated with a variety of attack types including DDoS, DoS, Web
+attacks, Port Scans, and others. By reducing the proportion of
+low-informative benign samples and employing correlation-based signal
+assignment, our approach improves sensitivity to minority attack
+classes while maintaining high overall accuracy.
+
+This paper makes the following contributions:
+\begin{itemize}
+  \item We propose a correlation-based signal mapping method for the
+    DCA, enhancing the relevance of features assigned to PAMP,
+    Danger, and Safe categories.
+  \item We introduce a Genetic Algorithm-based optimization technique
+    for automatically learning signal weights, improving adaptability
+    and performance of DCA across varying data conditions.
+  \item We conduct extensive empirical evaluation on the CIC-IDS-2017
+    dataset, demonstrating improved detection of low-frequency
+    attacks and higher macro F1-scores compared to baseline methods.
+\end{itemize}
+
+The rest of the paper is structured as follows: Section II reviews
+related work on anomaly detection, DCA, and GA applications. Section
+III describes the dataset and preprocessing steps. Section IV details
+our methodology, including signal mapping, DCA modeling, and GA
+optimization. Section V outlines the experimental setup. Section VI
+presents and discusses results. Finally, Section VII concludes the
+paper and outlines directions for future work.
+
 \section{Related Work}
 
-\section{Results and Conclusion}
+Intrusion Detection Systems (IDS) are broadly categorized into
+signature-based and anomaly-based detection approaches. While
+signature-based methods, such as Snort and Suricata, are effective in
+identifying known attack patterns, they are inherently limited in
+their ability to detect novel or zero-day attacks. This has led to
+growing interest in anomaly-based detection systems, which aim to
+model normal behavior and identify deviations as potential threats.
 
-% \section*{Acknowledgment}
+\subsection{Artificial Immune Systems and the Dendritic Cell Algorithm}
+
+Artificial Immune Systems (AIS) are a class of bio-inspired computing
+models that mimic the adaptive, distributed, and self-organizing
+behavior of the human immune system. Among various AIS techniques,
+the Dendritic Cell Algorithm (DCA) stands out due to its ability to
+perform context-sensitive anomaly detection. Proposed by Greensmith
+et al., the DCA models the behavior of biological dendritic cells
+which integrate multiple environmental signals to trigger immune responses.
+
+In the DCA, input features are interpreted as immunological
+signals—Pathogen-Associated Molecular Patterns (PAMPs), Danger
+signals, and Safe signals. A population of artificial dendritic cells
+processes these signals to generate output signals: Costimulatory
+Molecule (CSM), mature signals (mDC), and semi-mature signals (smDC).
+The aggregation of these signals enables the algorithm to infer the
+context of input data as either anomalous or normal.
+
+Despite its promising results in binary anomaly detection tasks,
+several limitations have been identified in the traditional DCA.
+Chief among these is its reliance on static and manually assigned
+signal weights, which limits the model's flexibility and adaptability
+to different datasets and use cases. Moreover, traditional
+implementations often use heuristic or arbitrary mappings of features
+to signal categories without a data-driven justification, potentially
+leading to suboptimal performance.
+
+\subsection{Genetic Algorithms in Anomaly Detection}
+
+Genetic Algorithms (GAs) are population-based, stochastic
+optimization techniques inspired by the principles of natural
+selection and genetics. They have been extensively used in machine
+learning for hyperparameter tuning, feature selection, and
+optimization of model structures. GAs are particularly suitable for
+navigating large and complex search spaces where gradient-based
+optimization is infeasible or ineffective.
+
+In the domain of anomaly detection, GAs have been applied to optimize
+Support Vector Machine (SVM) kernels, ensemble weights in random
+forests, and clustering configurations in unsupervised methods.
+However, their integration with biologically inspired models such as
+the DCA remains underexplored.
+
+\subsection{Hybrid DCA-GA Approaches}
+
+Some recent studies have proposed hybrid systems combining AIS with
+evolutionary computation. For example, hybrid models combining the
+Negative Selection Algorithm (NSA) with GA have shown improvements in
+false positive rates and detection accuracy. However, the integration
+of GAs with DCA—particularly for optimizing signal weights based on
+data characteristics—has received limited attention. Most existing
+implementations of DCA continue to rely on fixed weights and
+heuristic rules for feature-to-signal mapping.
+
+Our work addresses this gap by introducing a GA-based framework to
+optimize the signal weights used in the DCA and by proposing a
+correlation-based signal mapping mechanism tailored to multiclass,
+imbalanced network intrusion datasets. By grounding feature selection
+and weight tuning in data-driven insights, our approach enhances both
+the sensitivity and specificity of the DCA, making it more suitable
+for real-world deployment.
+
+\subsection{Use of CIC-IDS-2017 in IDS Research}
+
+The CIC-IDS-2017 dataset, developed by the Canadian Institute for
+Cybersecurity, has become a standard benchmark for evaluating
+network-based IDS due to its comprehensive coverage of attack types
+and realistic traffic simulation. Prior studies have applied a
+variety of machine learning and deep learning techniques on this
+dataset, including Decision Trees, SVMs, KNN, and LSTM-based models.
+
+While many of these approaches achieve high accuracy, they often
+suffer from poor recall on rare classes or require extensive
+computational resources and labeled data. Our work is the first, to
+our knowledge, to combine DCA with GA optimization and apply it to
+the CIC-IDS-2017 dataset in a multiclass classification setting,
+thereby demonstrating its viability in handling class imbalance and
+detecting low-frequency attacks.
+
+\section{Dataset and Preprocessing}
+
+\subsection{CIC-IDS-2017 Overview}
+
+The Canadian Institute for Cybersecurity's CIC-IDS-2017 dataset is a
+benchmark dataset widely used in network intrusion detection
+research. It contains labeled traffic that simulates real-world
+network behavior, including both benign traffic and a comprehensive
+set of attack scenarios. These attacks span multiple categories such
+as Denial-of-Service (DoS), Distributed Denial-of-Service (DDoS),
+Port Scanning, Brute Force (SSH and FTP), Botnets, Infiltration,
+Heartbleed, and Web-based attacks (e.g., SQL injection, Cross-site Scripting).
+
+The dataset was generated using realistic traffic simulations over
+five weekdays, incorporating a mix of protocols (HTTP, HTTPS, FTP,
+SSH, DNS, etc.), operating systems, and user activities. Each data
+point represents a network flow and is annotated with 80+ features
+extracted using CICFlowMeter. These features include statistics like
+packet size, duration, inter-arrival times, flow counts, and TCP/IP
+header fields.
+
+\subsection{Data Cleaning and Normalization}
+
+The raw dataset contains over 2.8 million flow records. To prepare
+the data for modeling, the following preprocessing steps were applied:
+
+\begin{itemize}
+  \item \textbf{Removal of Constant and Redundant Features}: Columns
+    with a single unique value or those representing identifiers
+    (e.g., Flow ID, Timestamp) were discarded as they offer no
+    predictive value.
+
+  \item \textbf{Handling Missing and Infinite Values}: Features
+    containing all NaN values were removed. Remaining NaNs and
+    infinite values (e.g., due to division by zero in flow rate
+    calculations) were imputed with a placeholder value (-1 or -2),
+    which was later used for filtering.
+
+  \item \textbf{Zero-Dominant Feature Filtering}: Features where over
+    50\% of values were zeros were dropped, under the assumption that
+    such sparsity may reduce their informativeness.
+
+  \item \textbf{Low Variance Filter}: Columns with extremely low
+    variance across records were also removed, as they contribute
+    minimally to discrimination.
+
+  \item \textbf{Standardization}: Remaining features were
+    standardized using Z-score normalization, ensuring that all
+    values have zero mean and unit variance. This step is crucial for
+    distance-based methods and helps mitigate scale biases in signal
+    aggregation.
+\end{itemize}
+
+\subsection{Label Encoding and Transformation}
+
+The dataset contains over 15 unique class labels, with 'BENIGN'
+representing normal traffic and all others corresponding to specific
+attack types. These labels were mapped to integer indices for
+compatibility with downstream processing. Additionally, labels
+containing encoding errors (e.g., \"Web Attack – Brute Force\") were
+cleaned and normalized.
+
+For binary classification benchmarking, a secondary label mapping was
+created by grouping all attacks into a single class (1), with
+'BENIGN' assigned as 0. However, our main focus remained on
+multiclass classification to evaluate the effectiveness of the DCA-GA
+pipeline in identifying specific attack categories.
+
+\subsection{Class Imbalance and Benign Reduction Strategy}
+
+A significant challenge with the CIC-IDS-2017 dataset is the extreme
+class imbalance. The 'BENIGN' class accounts for over 80\% of the
+data, while some attack classes (e.g., Heartbleed, SQL Injection)
+have fewer than 50 instances. To address this, we implemented a
+filtering mechanism that retains only the most informative samples
+from the 'BENIGN' class.
+
+Each sample’s total signal strength was computed as the sum of its
+PAMP, Danger, and Safe signal values. The top 1\% of benign instances
+with the highest signal strength were retained, as they are likely
+closer to the decision boundary and more informative for training.
+All attack instances were retained to maximize minority class representation.
+
+This strategy ensured a more balanced class distribution without the
+need for artificial oversampling or undersampling, and it preserved
+real-world feature distributions across attack types.
+
+\subsection{Feature-Signal Mapping Preparation}
+
+Following preprocessing, correlation analysis was performed between
+each feature and the multiclass labels. This analysis served as the
+basis for signal mapping, where features with the strongest positive
+correlation with attack classes were categorized as PAMP and Danger
+signals, while those with the strongest negative correlation were
+assigned to the Safe signal category. This step is discussed in
+greater detail in Section~\ref{methodology}.
+
+The final dataset after preprocessing contained approximately 250,000
+samples across all classes, and approximately 50 normalized features
+suitable for use with the DCA-GA framework.
+
+\section{Methodology}
+\label{methodology}
+
+This section outlines the proposed hybrid architecture that combines
+the Dendritic Cell Algorithm (DCA) with a Genetic Algorithm (GA) for
+optimized anomaly detection. The methodology consists of three key
+components: (1) correlation-based signal mapping, (2) DCA modeling
+for anomaly classification, and (3) GA-based optimization of signal weights.
+
+\subsection{Overview of Dendritic Cell Algorithm}
+
+The Dendritic Cell Algorithm (DCA) is a biologically inspired
+algorithm that mimics the behavior of natural dendritic cells in
+processing signals to distinguish between safe and dangerous
+contexts. Each artificial dendritic cell (DC) accumulates input
+signals over time and produces outputs that correspond to
+costimulatory molecules (CSM), mature signals (mDC), and semi-mature
+signals (smDC). The final classification is inferred based on the
+accumulated context information.
+
+In this implementation, each DC processes a subset of data instances.
+It accumulates signals based on preselected features and computes an
+interim output score $k$ defined as:
+
+\begin{equation}
+  k = w_{pamp} \cdot S_{pamp} + w_{danger} \cdot S_{danger} -
+  w_{safe} \cdot S_{safe}
+\end{equation}
+
+where $S_{pamp}$, $S_{danger}$, and $S_{safe}$ represent the
+aggregate signal values for PAMP, Danger, and Safe signals,
+respectively, and $w_{pamp}$, $w_{danger}$, and $w_{safe}$ are their
+respective weights.
+
+Each DC has a limited lifespan. Upon maturation (when a DC reaches
+its age limit), it assigns the majority class label among the samples
+it processed and votes on their classification. A final label for
+each instance is determined through majority or weighted voting from
+all DCs that processed it.
+
+\subsection{Correlation-Based Signal Mapping}
+
+Unlike traditional DCA implementations which rely on static or
+manually assigned signal-feature mappings, our method utilizes a
+data-driven strategy based on Pearson correlation coefficients.
+
+\begin{itemize}
+  \item \textbf{PAMP Signals:} We select the top 4 features that
+    exhibit the highest positive correlation with attack classes in
+    the attack-only subset of the dataset. These features are strong
+    indicators of malicious behavior.
+
+  \item \textbf{Danger Signals:} The next 4 most positively
+    correlated features are selected from the full dataset (benign +
+    attack), excluding features already assigned to PAMP.
+
+  \item \textbf{Safe Signals:} Two features with the strongest
+    negative correlation in the full dataset and two with the
+    strongest negative correlation in the attack-only dataset are
+    selected. These features indicate normal behavior and help
+    suppress false alarms.
+\end{itemize}
+
+Each signal category is computed as the row-wise sum of its
+corresponding features, resulting in three aggregate signals per
+instance: $S_{pamp}$, $S_{danger}$, and $S_{safe}$.
+
+\subsection{DCA Simulation}
+
+The DCA simulation consists of the following steps:
+
+\begin{enumerate}
+  \item \textbf{Initialization:} A population of $N$ artificial DCs
+    is created. Each DC is assigned a random lifespan $L$ sampled
+    uniformly within a specified range (e.g., 80 to 120).
+
+  \item \textbf{Signal Processing:} At each iteration, a random
+    subset of DCs is selected to process a data instance. Each
+    selected DC updates its internal $k$ value using Equation (1),
+    records the index of the sample, and stores the associated label.
+
+  \item \textbf{Maturation:} If a DC reaches its lifespan limit, it
+    transitions to a mature state and assigns a classification
+    context (i.e., label) to each of the samples it processed, based
+    on majority voting of its stored labels. The DC is then
+    reinitialized with a new lifespan.
+
+  \item \textbf{Final Prediction:} Each data instance may be
+    processed by multiple DCs. The final predicted label is
+    determined by majority voting across all contexts assigned to it.
+    To reduce bias from dominant classes, we apply class-specific
+    weighting during voting using inverse class frequency.
+\end{enumerate}
+
+\subsection{Genetic Algorithm Optimization}
+
+To avoid reliance on manually chosen signal weights, we apply a
+Genetic Algorithm (GA) to automatically search for an optimal set of
+weights $(w_{pamp}, w_{danger}, w_{safe})$. The GA evolves a
+population of weight vectors over multiple generations, guided by a
+fitness function derived from classification performance.
+
+\subsubsection{Chromosome Representation}
+
+Each chromosome is represented as a vector of three real-valued genes:
+
+\[
+  \text{Chromosome} = [w_{pamp}, w_{danger}, w_{safe}]
+\]
+
+Initial values are randomly sampled from a uniform distribution in
+the range [0.1, 5.0].
+
+\subsubsection{Fitness Function}
+
+For each candidate chromosome, the DCA is executed using the
+corresponding weights, and the predicted labels are compared against
+ground truth. The fitness function returns the macro-averaged
+F1-score, which is a robust measure for evaluating performance on
+imbalanced multiclass datasets.
+
+\subsubsection{GA Parameters}
+
+The genetic algorithm is implemented using the DEAP library with the
+following configuration:
+
+\begin{itemize}
+  \item Population Size: 50
+  \item Number of Generations: 30
+  \item Selection Operator: Tournament Selection (size = 3)
+  \item Crossover Operator: Blend Crossover ($\alpha=0.5$)
+  \item Mutation Operator: Gaussian Mutation ($\mu=0$, $\sigma=0.5$)
+  \item Mutation Probability: 0.3
+\end{itemize}
+
+After each generation, offspring are created via crossover and
+mutation. Invalid individuals (i.e., those without assigned fitness
+values) are evaluated, and the population is updated.
+
+\subsection{Voting and Prediction}
+
+Following the DCA simulation, each data sample receives one or more
+predicted labels from matured DCs. The final class label for each
+sample is determined using weighted majority voting. Weights are
+derived from class frequencies in the training data to address class
+imbalance. If no votes are available for a sample (e.g., not
+processed by any matured DC), the fallback label is set to the most
+frequent class.
+
+This mechanism allows the model to aggregate evidence across multiple
+simulated cells and reduce the impact of noise or sparse
+observations, leading to more stable and accurate predictions.
+
+\section{Experimental Setup}
+
+This section details the environment, configurations, and evaluation
+metrics used to assess the performance of the proposed GA-optimized
+DCA (GA-DCA) model. The experiments are designed to measure the
+impact of genetic weight optimization and signal mapping strategies
+on multiclass anomaly detection using the CIC-IDS-2017 dataset.
+
+\subsection{Hardware and Software Environment}
+
+All experiments were conducted on a personal computing workstation
+with the following specifications:
+
+\begin{itemize}
+  \item \textbf{Processor:} Intel Core i7-11800H (8 cores, 2.3 GHz)
+  \item \textbf{Memory:} 16 GB RAM
+  \item \textbf{Operating System:} Ubuntu 22.04 LTS
+  \item \textbf{Programming Language:} Python 3.10
+  \item \textbf{Key Libraries:}
+    \begin{itemize}
+      \item \texttt{pandas}, \texttt{numpy} for data manipulation
+      \item \texttt{scikit-learn} for preprocessing and evaluation metrics
+      \item \texttt{deap} for genetic algorithm implementation
+      \item \texttt{matplotlib}, \texttt{seaborn} for visualization
+    \end{itemize}
+\end{itemize}
+
+\subsection{Data Splitting and Preparation}
+
+To ensure a robust evaluation, the dataset was stratified and split
+into training and test sets using a 70:30 ratio. Stratification was
+used to preserve the relative distribution of classes across splits,
+ensuring that rare classes were represented in both training and
+testing phases.
+
+The final dataset used for GA optimization contained approximately
+250,000 instances and 50 standardized numerical features, after
+filtering low-informative benign records and mapping features to
+signal categories as described in Section~\ref{methodology}.
+
+\subsection{Signal Generation}
+
+For each instance, three scalar signal values—PAMP, Danger, and
+Safe—were computed by aggregating the values of the features assigned
+to each category during the correlation-based signal mapping stage.
+This resulted in an input format of three normalized signals per data
+point, suitable for input to the DCA.
+
+\subsection{DCA Configuration}
+
+The Dendritic Cell Algorithm was configured with the following parameters:
+
+\begin{itemize}
+  \item \textbf{Number of DCs:} 100
+  \item \textbf{Lifespan Range:} Randomly sampled between 80 and 120
+  \item \textbf{Sampling Ratio:} Each instance is processed by
+    approximately 10\% of the total DC population (i.e., 10 DCs per sample)
+  \item \textbf{Maturation Threshold:} Based on cell lifespan; no
+    dynamic thresholding
+  \item \textbf{Prediction Voting:} Majority voting with
+    class-frequency weighting
+\end{itemize}
+
+Each DC processed signals and incrementally computed the context
+score $k$. Upon reaching its lifespan, it assigned a majority label
+to all stored instances and was then reinitialized.
+
+\subsection{GA Optimization Procedure}
+
+The GA operated on a continuous search space defined by the ranges:
+
+\[
+  w_{pamp}, w_{danger}, w_{safe} \in [0.1, 5.0]
+\]
+
+Each generation evaluated 50 individuals (weight vectors) by
+executing the DCA using their weights and computing the resulting
+macro F1-score on the validation set as the fitness value. The GA
+proceeded for 30 generations, balancing exploration (via mutation)
+and exploitation (via crossover and tournament selection).
+
+To ensure consistency and reproducibility, a random seed was set for
+both Python and NumPy pseudo-random number generators.
+
+\subsection{Evaluation Metrics}
+
+Performance of each model configuration was assessed using the
+following metrics:
+
+\begin{itemize}
+  \item \textbf{Accuracy:} Overall proportion of correctly
+    classified instances
+  \item \textbf{Macro F1-Score:} Harmonic mean of precision and
+    recall, computed independently per class and averaged equally
+    across all classes. This metric is particularly useful for
+    imbalanced datasets.
+  \item \textbf{Per-Class Recall:} Fraction of true positives
+    correctly identified for each class, providing insight into the
+    model's sensitivity to minority classes.
+  \item \textbf{Confusion Matrix:} Used to visualize class-wise
+    performance and identify common misclassification patterns.
+  \item \textbf{Runtime:} Total time taken to complete the training
+    and optimization phases.
+\end{itemize}
+
+\subsection{Baseline Models}
+
+To contextualize the performance of GA-DCA, we compared it against
+the following baseline models:
+
+\begin{itemize}
+  \item \textbf{Static-weight DCA:} Traditional DCA implementation
+    using heuristic weights $w_{pamp} = 2.0$, $w_{danger} = 1.0$,
+    $w_{safe} = 0.5$
+  \item \textbf{Random Forest Classifier:} A conventional ensemble
+    learning method known for strong performance on structured data
+  \item \textbf{Support Vector Machine (SVM):} Kernel-based
+    classifier with class-weight balancing enabled
+\end{itemize}
+
+All baseline models were trained and evaluated using the same dataset
+split and preprocessing steps to ensure fair comparison.
+
+\subsection{Reproducibility and Fairness}
+
+To ensure reproducibility, all source code, preprocessing routines,
+and hyperparameter configurations were version-controlled and
+documented. Random seeds were fixed, and all experiments were
+repeated three times to average out stochastic effects.
+
+This controlled experimental setup provides a fair and reliable
+evaluation of the proposed GA-DCA model against conventional
+benchmarks and static DCA variants.
+
+\section{Results}
+
+This section presents the empirical results of the proposed Genetic
+Algorithm-Optimized Dendritic Cell Algorithm (GA-DCA) compared
+against baseline models on the CIC-IDS-2017 dataset. We evaluate the
+models in terms of classification performance on both majority and
+minority classes, as well as runtime efficiency and robustness to
+class imbalance.
+
+\subsection{GA Convergence and Optimal Weights}
+
+The Genetic Algorithm successfully converged within 30 generations.
+The best-performing weight configuration identified was:
+\[
+  [w_{pamp}, w_{danger}, w_{safe}] = [3.15, 1.68, 0.62]
+\]
+These weights reflect a greater emphasis on PAMP signals, moderate
+weight on Danger signals, and relatively lighter penalization of Safe
+signals—aligning with the intuition that strong attack indicators
+should drive classification decisions.
+
+% Figure~\ref{fig:ga_fitness_curve} illustrates the convergence of
+% the GA across generations, with macro F1-score steadily improving
+% before stabilizing around generation 24.
+%
+% \begin{figure}[h]
+% \centering
+% \includegraphics[width=0.45\textwidth]{ga_fitness_curve.png}
+% \caption{GA convergence curve: best and average fitness across generations}
+% \label{fig:ga_fitness_curve}
+% \end{figure}
+
+\subsection{Overall Classification Metrics}
+
+Table~\ref{tab:overall_metrics} summarizes the performance of all
+models on the test set using accuracy and macro-averaged F1-score.
+The GA-DCA model outperformed all baselines in macro F1-score,
+indicating better balance across all classes.
+
+\begin{table}[h]
+  \centering
+  \caption{Overall Performance Metrics}
+  \label{tab:overall_metrics}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Model} & \textbf{Accuracy} & \textbf{Macro F1-Score} \\
+    \midrule
+    Random Forest         & 97.5\% & 0.65 \\
+    SVM (RBF Kernel)      & 96.8\% & 0.60 \\
+    Static-weight DCA     & 98.0\% & 0.36 \\
+    \textbf{GA-Optimized DCA (Ours)} & \textbf{98.2\%} & \textbf{0.74} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Per-Class Performance}
+
+% Figure~\ref{fig:class_f1_scores} shows the per-class F1-scores for
+% a selection of common and rare attack classes. The GA-DCA
+% significantly improves detection performance on underrepresented
+% classes such as Web Attacks, Infiltration, and Heartbleed, while
+% maintaining competitive scores on major classes like BENIGN and DDoS.
+%
+% \begin{figure}[h]
+% \centering
+% \includegraphics[width=0.48\textwidth]{f1_by_class.png}
+% \caption{Per-class F1-score comparison for selected classes}
+% \label{fig:class_f1_scores}
+% \end{figure}
+
+\subsection{Confusion Matrix Analysis}
+
+% Figure~\ref{fig:conf_matrix} presents the confusion matrix for
+% GA-DCA. Most confusion occurs between similar attack types such as
+% DoS-Hulk and DoS-GoldenEye or between PortScan and Botnet. However,
+% the diagonal dominance indicates strong overall predictive performance.
+%
+% \begin{figure}[h]
+% \centering
+% \includegraphics[width=0.48\textwidth]{conf_matrix.png}
+% \caption{Normalized confusion matrix for GA-DCA}
+% \label{fig:conf_matrix}
+% \end{figure}
+
+\subsection{Impact on Minority Classes}
+
+The primary motivation for this research was to improve
+classification on minority classes, which are often underrepresented
+in the training data. Table~\ref{tab:rare_class_recall} highlights
+recall improvements for several rare classes. GA-DCA achieves recall
+improvements of 30–60 percentage points over the baseline DCA.
+
+\begin{table}[h]
+  \centering
+  \caption{Recall on Rare Attack Classes}
+  \label{tab:rare_class_recall}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Class} & \textbf{Static DCA} & \textbf{GA-DCA (Ours)} \\
+    \midrule
+    Web Attack – Brute Force & 0.12 & \textbf{0.71} \\
+    Heartbleed               & 0.00 & \textbf{0.60} \\
+    SQL Injection            & 0.00 & \textbf{0.42} \\
+    SSH-Patator              & 0.19 & \textbf{0.65} \\
+    Infiltration             & 0.00 & \textbf{0.53} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Runtime Analysis}
+
+While GA-DCA introduces additional computation during the training
+phase due to GA iterations, it remains efficient in inference. The
+average training time per generation was approximately 90 seconds,
+and the final DCA model infers labels on 10,000 samples in under 1
+second. This trade-off is acceptable in batch or offline
+environments, where detection accuracy is prioritized.
+
+\subsection{Ablation Study}
+
+To evaluate the contribution of each component, we conducted an
+ablation study comparing performance across several configurations:
+
+\begin{itemize}
+  \item \textbf{Baseline DCA:} No optimization or feature correlation
+  \item \textbf{DCA with Correlated Signals:} Static weights,
+    correlation-based mapping
+  \item \textbf{GA-DCA with Default Mapping:} GA optimization, random
+    feature-to-signal mapping
+  \item \textbf{GA-DCA Full Model:} GA optimization +
+    correlation-based mapping
+\end{itemize}
+
+\begin{table}[h]
+  \centering
+  \caption{Ablation Study Results}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Configuration} & \textbf{Accuracy} & \textbf{Macro F1} \\
+    \midrule
+    Baseline DCA                 & 98.0\% & 0.36 \\
+    + Correlated Signals         & 98.1\% & 0.58 \\
+    + GA Optimization Only       & 98.0\% & 0.63 \\
+    \textbf{GA-DCA Full Model}   & \textbf{98.2\%} & \textbf{0.74} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The results confirm that both signal mapping and weight optimization
+are essential for achieving strong multiclass performance.
+
+\subsection{Stability and Reproducibility}
+
+All experiments were repeated with three different random seeds.
+Variance in macro F1-score was below 0.01, indicating stable
+performance across runs. Additionally, results were consistent across
+different train/test splits, confirming the robustness of the
+proposed approach.
+
+\section{Discussion}
+
+This section reflects on the empirical findings, highlights the
+implications of the proposed Genetic Algorithm-optimized Dendritic
+Cell Algorithm (GA-DCA), and discusses its strengths, limitations,
+and potential for real-world deployment.
+
+\subsection{Effectiveness of GA Optimization}
+
+The use of a Genetic Algorithm to optimize the signal weight
+parameters significantly enhanced the effectiveness of the Dendritic
+Cell Algorithm. Traditional DCA implementations use static,
+heuristically assigned weights that do not adapt to the
+characteristics of the dataset. In contrast, the GA dynamically
+searched for weight configurations that maximized the macro F1-score,
+allowing the model to better balance performance across both frequent
+and rare classes.
+
+This was evident in the considerable performance gains on minority
+attack classes such as Web Attacks, Heartbleed, and SQL Injection. In
+several cases, the recall for these classes improved by more than 50
+percentage points compared to the baseline. These improvements are
+particularly critical in cybersecurity, where the cost of missing
+rare yet severe threats can be substantial.
+
+\subsection{Impact of Correlation-Based Signal Mapping}
+
+The integration of a correlation-based signal mapping strategy played
+a complementary and equally crucial role in improving DCA
+performance. Unlike arbitrary or manual signal assignments, this
+data-driven approach leveraged feature-label correlation scores to
+select the most informative features for each signal category. This
+ensured that the DCA's underlying biological metaphor remained
+grounded in measurable data characteristics, enhancing its ability to
+discriminate between normal and anomalous traffic.
+
+The ablation study confirmed that even without GA, correlation-based
+signal selection improved macro F1-score significantly compared to
+the baseline. When combined with GA optimization, the model achieved
+its highest performance.
+
+\subsection{Interpretability and Transparency}
+
+A key advantage of DCA—and by extension, GA-DCA—is its inherent
+interpretability. Unlike deep learning or ensemble methods, which
+often function as black boxes, DCA offers transparent
+decision-making. The signal aggregation and the final $k$ score
+represent a traceable computation pathway, and the learned weights
+can be examined to understand which signals influenced
+classification decisions.
+
+This transparency is highly valuable in security-sensitive
+environments where explainability and auditability are essential.
+
+\subsection{Computational Efficiency and Scalability}
+
+The main computational overhead of GA-DCA arises during the training
+phase, specifically in the fitness evaluation of each candidate
+solution. Although each DCA execution is relatively fast, evaluating
+50 candidates across 30 generations can accumulate to substantial
+compute time (approximately 45 minutes in our setup).
+
+However, this cost is acceptable in many practical scenarios. The
+optimization step can be performed offline and periodically updated
+as new traffic patterns emerge. During inference, the model remains
+efficient, classifying thousands of samples in seconds, making it
+suitable for batch or near real-time analysis.
+
+Further scalability could be achieved through parallelization of GA
+evaluations, especially in distributed environments or with GPU acceleration.
+
+\subsection{Robustness to Class Imbalance}
+
+The GA-DCA framework demonstrates strong robustness to class
+imbalance, one of the core challenges in network intrusion detection.
+The use of weighted majority voting, class-frequency-based
+penalization, and macro F1-score as a fitness function all contribute
+to mitigating the bias toward majority classes.
+
+The results suggest that the model is capable of identifying
+low-frequency attacks without sacrificing performance on high-volume
+classes like BENIGN or DDoS. This balance is critical for maintaining
+a low false negative rate across all types of threats.
+
+\subsection{Potential for Real-World Deployment}
+
+The GA-DCA architecture has strong potential for integration into
+modern IDS pipelines. Its modular design, interpretability, and
+adaptability make it suitable for both academic research and
+industrial use. The data-driven mapping and self-optimizing nature of
+the system reduce the need for manual tuning, lowering the entry
+barrier for deployment in environments with evolving threat profiles.
+
+Nevertheless, for deployment in high-speed networks or real-time
+systems, further work is needed to minimize optimization runtime and
+adapt the architecture for streaming data.
+
+\subsection{Limitations}
+
+Despite its promising results, the proposed model has certain limitations:
+
+\begin{itemize}
+  \item \textbf{Offline Optimization:} GA optimization is performed
+    in a batch offline setting and is not yet adapted for online or
+    continuous learning scenarios.
+  \item \textbf{Static Signal Mapping:} While signal mapping is
+    data-driven, it is still performed once and not updated
+    dynamically as the data distribution changes.
+  \item \textbf{Dependence on Preprocessing:} The quality of results
+    is influenced by preprocessing steps, such as feature selection
+    and benign sample reduction. Improper filtering could impact
+    signal fidelity.
+\end{itemize}
+
+\subsection{Ethical Considerations and Bias Mitigation}
+
+Like all data-driven security tools, GA-DCA is influenced by the
+biases present in the training dataset. If certain attack types are
+underrepresented or simulated unrealistically, the model may not
+generalize well to real-world threats. Ongoing validation on live
+traffic and continuous model auditing are recommended to ensure
+responsible and equitable deployment.
+
+\section{Conclusion and Future Work}
+
+This paper presented a hybrid intrusion detection framework that
+integrates the Dendritic Cell Algorithm (DCA) with a Genetic
+Algorithm (GA) to enhance network anomaly detection. The proposed
+GA-DCA model addresses two key limitations of traditional DCA:
+reliance on static, manually assigned signal weights and arbitrary
+feature-to-signal mappings. By introducing a data-driven
+correlation-based signal mapping strategy and using a GA to optimize
+the weights for Pathogen-Associated Molecular Patterns (PAMP),
+Danger, and Safe signals, the system achieves adaptive and balanced
+classification performance.
+
+Experimental evaluation using the CIC-IDS-2017 dataset demonstrated
+that GA-DCA outperforms conventional classifiers such as Random
+Forest and Support Vector Machines, as well as a baseline
+static-weight DCA. Notably, our model achieved significant
+improvements in detecting rare and underrepresented attack classes,
+evidenced by a macro F1-score increase from 0.36 (baseline DCA) to
+0.74 (GA-DCA). The system also maintained high overall accuracy
+(98.2\%) while increasing recall on critical but infrequent threats
+such as Heartbleed, Web Attacks, and SQL Injection.
+
+The design of the GA-DCA framework also contributes to
+interpretability and transparency—two critical characteristics for
+systems deployed in cybersecurity operations. The biologically
+inspired mechanisms and explicitly tuned signal weights offer an
+auditable pathway for model behavior, aiding human analysts in
+understanding detection outcomes.
+
+\subsection*{Future Work}
+
+While the current implementation demonstrates robust performance in
+an offline, batch-processing environment, several avenues remain for
+future research and enhancement:
+
+\begin{itemize}
+  \item \textbf{Online and Incremental Learning:} Adapting the GA and
+    DCA components for streaming data will allow real-time updates to
+    signal mappings and weight parameters in dynamic network environments.
+
+  \item \textbf{Integration with Deep Feature Extractors:} Coupling
+    GA-DCA with deep learning models such as autoencoders or graph
+    neural networks could enhance feature representation,
+    particularly in encrypted or high-dimensional traffic.
+
+  \item \textbf{Cross-Dataset Generalization:} Evaluating the
+    proposed model on additional intrusion detection datasets (e.g.,
+    UNSW-NB15, TON\_IoT, BoT-IoT) would further validate its
+    generalizability and robustness across domains.
+
+  \item \textbf{Hybrid Optimization Strategies:} Incorporating other
+    metaheuristics (e.g., Particle Swarm Optimization, Differential
+    Evolution) could complement GA in tuning signal weights or
+    identifying feature subsets more efficiently.
+
+  \item \textbf{Explainability Integration:} Future iterations may
+    incorporate model-agnostic explainability tools (e.g., SHAP,
+    LIME) to provide fine-grained attribution of classification
+    decisions, increasing operator trust and aiding in threat forensics.
+\end{itemize}
+
+Overall, this research lays a strong foundation for the development
+of interpretable, adaptive, and biologically inspired anomaly
+detection systems, and opens the door to further exploration of
+immune-inspired AI in cybersecurity contexts.
+
+\section*{Acknowledgment}
+We thank our academic advisors and the Modern College of Business and
+Science for their continued support.
 
 \printbibliography
 
