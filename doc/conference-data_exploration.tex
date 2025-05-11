@@ -77,20 +77,20 @@ need for robust cybersecurity mechanisms. As modern networks grow in
 complexity and scale, they also become more susceptible to a broader
 spectrum of cyber threats. Traditional signature-based Intrusion
 Detection Systems (IDS), while effective against known threats, often
-struggle to detect novel or evolving attack patterns. This limitation
+struggle to detect novel or evolving attack patterns~\cite{liao_intrusion_2013}. This limitation
 necessitates the adoption of anomaly-based detection systems, which
-aim to identify deviations from established patterns of normal behavior.
+aim to identify deviations from established patterns of normal behavior~\cite{pawar2015network}.
 
 Anomaly detection, particularly within network traffic, is a complex
 task. It involves the classification of highly imbalanced data, where
 benign activities vastly outnumber malicious ones, and where attack
 classes themselves exhibit significant intra-class variability.
 Machine learning (ML) approaches have been widely adopted to tackle
-this challenge, but they often rely heavily on large amounts of
+this challenge~\cite{kilincer_machine_2021}, but they often rely heavily on large amounts of
 labeled data and can be sensitive to noisy features and class
-imbalance. Moreover, the decision-making processes in many ML models,
+imbalance~\cite{Devi2020ARO}. Moreover, the decision-making processes in many ML models,
 especially deep learning, remain largely opaque, limiting their
-interpretability and trustworthiness in high-stakes environments.
+interpretability and trustworthiness in high-stakes environments~\cite{vinayakumar2019deep}.
 
 Inspired by the natural immune system, Artificial Immune Systems
 (AIS) offer a biologically motivated paradigm for anomaly detection.
@@ -119,7 +119,7 @@ signal mapping using correlation analysis, enabling more informed and
 context-specific assignment of features to signal types.
 
 Our proposed model—Genetic Algorithm-Optimized Dendritic Cell
-Algorithm (GA-DCA)—is evaluated using the CIC-IDS-2017 dataset, which
+Algorithm (GA-DCA)—is evaluated using the CIC-IDS-2017 dataset~\cite{sharafaldin_toward_2018}, which
 offers a realistic and heterogeneous set of network traffic records,
 annotated with a variety of attack types including DDoS, DoS, Web
 attacks, Port Scans, and others. By reducing the proportion of
@@ -151,12 +151,12 @@ paper and outlines directions for future work.
 \section{Related Work}
 
 Intrusion Detection Systems (IDS) are broadly categorized into
-signature-based and anomaly-based detection approaches. While
+signature-based and anomaly-based detection approaches~\cite{liao_intrusion_2013}. While
 signature-based methods, such as Snort and Suricata, are effective in
 identifying known attack patterns, they are inherently limited in
-their ability to detect novel or zero-day attacks. This has led to
+their ability to detect novel or zero-day attacks~\cite{thomas_usefulness_2008}. This has led to
 growing interest in anomaly-based detection systems, which aim to
-model normal behavior and identify deviations as potential threats.
+model normal behavior and identify deviations as potential threats~\cite{elmrabit2020evaluation}.
 
 \subsection{Artificial Immune Systems and the Dendritic Cell Algorithm}
 
@@ -189,7 +189,7 @@ leading to suboptimal performance.
 
 Genetic Algorithms (GAs) are population-based, stochastic
 optimization techniques inspired by the principles of natural
-selection and genetics. They have been extensively used in machine
+selection and genetics~\cite{freund_decision-theoretic_1997}. They have been extensively used in machine
 learning for hyperparameter tuning, feature selection, and
 optimization of model structures. GAs are particularly suitable for
 navigating large and complex search spaces where gradient-based
@@ -197,7 +197,7 @@ optimization is infeasible or ineffective.
 
 In the domain of anomaly detection, GAs have been applied to optimize
 Support Vector Machine (SVM) kernels, ensemble weights in random
-forests, and clustering configurations in unsupervised methods.
+forests~\cite{breiman_random_2001}, and clustering configurations in unsupervised methods.
 However, their integration with biologically inspired models such as
 the DCA remains underexplored.
 
@@ -225,9 +225,9 @@ for real-world deployment.
 The CIC-IDS-2017 dataset, developed by the Canadian Institute for
 Cybersecurity, has become a standard benchmark for evaluating
 network-based IDS due to its comprehensive coverage of attack types
-and realistic traffic simulation. Prior studies have applied a
+and realistic traffic simulation~\cite{khan_comprehensive_2024}. Prior studies have applied a
 variety of machine learning and deep learning techniques on this
-dataset, including Decision Trees, SVMs, KNN, and LSTM-based models.
+dataset, including Decision Trees, SVMs, KNN, and LSTM-based models~\cite{ustebay2018intrusion,panigrahi2018detailed}.
 
 While many of these approaches achieve high accuracy, they often
 suffer from poor recall on rare classes or require extensive
@@ -243,7 +243,7 @@ detecting low-frequency attacks.
 
 The Canadian Institute for Cybersecurity's CIC-IDS-2017 dataset is a
 benchmark dataset widely used in network intrusion detection
-research. It contains labeled traffic that simulates real-world
+research~\cite{sharafaldin_toward_2018}. It contains labeled traffic that simulates real-world
 network behavior, including both benign traffic and a comprehensive
 set of attack scenarios. These attacks span multiple categories such
 as Denial-of-Service (DoS), Distributed Denial-of-Service (DDoS),
@@ -308,7 +308,7 @@ pipeline in identifying specific attack categories.
 \subsection{Class Imbalance and Benign Reduction Strategy}
 
 A significant challenge with the CIC-IDS-2017 dataset is the extreme
-class imbalance. The 'BENIGN' class accounts for over 80\% of the
+class imbalance~\cite{engelen2021troubleshooting}. The 'BENIGN' class accounts for over 80\% of the
 data, while some attack classes (e.g., Heartbleed, SQL Injection)
 have fewer than 50 instances. To address this, we implemented a
 filtering mechanism that retains only the most informative samples
@@ -321,13 +321,13 @@ closer to the decision boundary and more informative for training.
 All attack instances were retained to maximize minority class representation.
 
 This strategy ensured a more balanced class distribution without the
-need for artificial oversampling or undersampling, and it preserved
+need for artificial oversampling or undersampling~\cite{Devi2020ARO}, and it preserved
 real-world feature distributions across attack types.
 
 \subsection{Feature-Signal Mapping Preparation}
 
 Following preprocessing, correlation analysis was performed between
-each feature and the multiclass labels. This analysis served as the
+each feature and the multiclass labels~\cite{Kurniabudi2020-if}. This analysis served as the
 basis for signal mapping, where features with the strongest positive
 correlation with attack classes were categorized as PAMP and Danger
 signals, while those with the strongest negative correlation were
@@ -606,7 +606,7 @@ the following baseline models:
     using heuristic weights $w_{pamp} = 2.0$, $w_{danger} = 1.0$,
     $w_{safe} = 0.5$
   \item \textbf{Random Forest Classifier:} A conventional ensemble
-    learning method known for strong performance on structured data
+    learning method known for strong performance on structured data~\cite{breiman_random_2001}
   \item \textbf{Support Vector Machine (SVM):} Kernel-based
     classifier with class-weight balancing enabled
 \end{itemize}
@@ -920,9 +920,9 @@ the weights for Pathogen-Associated Molecular Patterns (PAMP),
 Danger, and Safe signals, the system achieves adaptive and balanced
 classification performance.
 
-Experimental evaluation using the CIC-IDS-2017 dataset demonstrated
+Experimental evaluation using the CIC-IDS-2017 dataset~\cite{sharafaldin_toward_2018} demonstrated
 that GA-DCA outperforms conventional classifiers such as Random
-Forest and Support Vector Machines, as well as a baseline
+Forest~\cite{breiman_random_2001} and Support Vector Machines, as well as a baseline
 static-weight DCA. Notably, our model achieved significant
 improvements in detecting rare and underrepresented attack classes,
 evidenced by a macro F1-score increase from 0.36 (baseline DCA) to
