@@ -52,7 +52,7 @@ Enhanced Genetic Algorithm for Anomaly Detection in Network}
   a comprehensive benchmark for network intrusion detection,
   encompassing a wide spectrum of attack types including DoS, DDoS,
   Botnet, Infiltration, and Web-based threats. To address the class
-  imbalance inherent in real-world traffic datasets, we employ class weighting
+  imbalance inherent in real-world traffic datasets, we employed class weighting
   techniques and stratified sampling during model training and evaluation.
   Experimental results demonstrate that the
   GA-optimized DCA significantly outperforms baseline DCA and
@@ -522,14 +522,16 @@ on multiclass anomaly detection using the CIC-IDS-2017 dataset.
 
 \subsection{Hardware and Software Environment}
 
-All experiments were conducted on a personal computing workstation
-with the following specifications:
+All experiments were conducted using Google Colab with the following specifications:
 
 \begin{itemize}
-  \item \textbf{Processor:} Intel Core i7-11800H (8 cores, 2.3 GHz)
-  \item \textbf{Memory:} 16 GB RAM
-  \item \textbf{Operating System:} Ubuntu 22.04 LTS
-  \item \textbf{Programming Language:} Python 3.10
+  \item \textbf{Processor:} Intel Xeon (single core, 2.2 GHz)
+  \item \textbf{Memory:} 12.67 GB RAM
+  \item \textbf{Operating System:} Ubuntu 22.04.4 LTS (Jammy Jellyfish)
+  \item \textbf{Environment:} Docker container on Google Compute Engine
+  \item \textbf{Storage:} 90 GB Persistent Disk
+  \item \textbf{Network:} 10 Gbps
+  \item \textbf{Programming Language:} Python 3
   \item \textbf{Key Libraries:}
     \begin{itemize}
       \item \texttt{pandas}, \texttt{numpy} for data manipulation
