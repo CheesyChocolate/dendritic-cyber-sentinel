@@ -54,8 +54,8 @@ Enhanced Genetic Algorithm for Anomaly Detection in Network}
   a comprehensive benchmark for network intrusion detection,
   encompassing a wide spectrum of attack types including DoS, DDoS,
   Botnet, Infiltration, and Web-based threats. The dataset contains over
-  5.6 million flow records with 14 distinct attack types, with extreme class
-  imbalance where some attack types have fewer than 50 instances. To address the class
+  2.8 million flow records with 14 distinct attack types, with extreme class
+  imbalance where some attack types have fewer than 20 instances. To address the class
   imbalance inherent in real-world traffic datasets, we employed class weighting
   techniques and stratified sampling during model training and evaluation.
   Experimental results demonstrate that the
@@ -308,7 +308,8 @@ the data for modeling, the following preprocessing steps were applied:
     aggregation.
 \end{itemize}
 
-Table~\ref{tab:dataset_summary} summarizes the characteristics of the dataset before and after preprocessing.
+After these preprocessing steps, the dataset was reduced to 2,522,362 records
+with 45 features, as summarized in Table~\ref{tab:dataset_summary}.
 
 \begin{table}[h]
   \centering
@@ -318,10 +319,10 @@ Table~\ref{tab:dataset_summary} summarizes the characteristics of the dataset be
     \toprule
     \textbf{Characteristic} & \textbf{Raw Dataset} & \textbf{Preprocessed} \\
     \midrule
-    Number of Records & 5,661,486 & $\approx$250,000 \\
-    Number of Features & 78 & $\approx$50 \\
-    BENIGN Records (\%) & 80.3\% & 80.3\% \\
-    Missing Values (total) & 2,716 & 0 \\
+    Number of Records & 2,830,743 & 2,522,362 \\
+    Number of Features & 78 & 45 \\
+    BENIGN Records (\%) & 80.3\% & 83.1\% \\
+    Missing Values (total) & 1,358 & 0 \\
     Attack Classes & 14 & 14 \\
     \bottomrule
   \end{tabular}
@@ -346,10 +347,10 @@ pipeline in identifying specific attack categories.
 
 A significant challenge with the CIC-IDS-2017 dataset is the extreme
 class imbalance~\cite{engelen2021troubleshooting}. The 'BENIGN' class
-accounts for over 80\% of the data (4,546,194 samples out of 5,661,486),
+accounts for over 80\% of the data (2,096,484 samples out of 2,522,362),
 while some attack classes are severely underrepresented. The most imbalanced
-examples include Heartbleed (22 instances), Web Attack – SQL Injection (42 instances),
-and Infiltration (72 instances), highlighting the real-world challenge of detecting
+examples include Heartbleed (11 instances), Web Attack – SQL Injection (21 instances),
+and Infiltration (36 instances), highlighting the real-world challenge of detecting
 rare but critical attacks.
 
 Figure~\ref{fig:class_distribution} illustrates the severe class imbalance in the dataset,
@@ -394,9 +395,8 @@ assigned to PAMP and Danger signals, while those with negative correlation were 
 \end{figure}
 
 The final dataset after preprocessing contained approximately
-250,000 instances and 50 standardized numerical features, after
-preprocessing and feature selection and mapping features to
-signal categories as described in Section~\ref{methodology}.
+2.5 million instances and 45 standardized numerical features, ready for
+feature selection and mapping to signal categories as described in Section~\ref{methodology}.
 
 \section{Methodology}
 \label{methodology}
@@ -716,9 +716,8 @@ ensuring that rare classes were represented in both training and
 testing phases.
 
 The final dataset used for GA optimization contained approximately
-250,000 instances and 50 standardized numerical features, after
-preprocessing and feature selection and mapping features to
-signal categories as described in Section~\ref{methodology}.
+2.5 million instances and 45 standardized numerical features, after
+preprocessing, with features mapped to signal categories as described in Section~\ref{methodology}.
 
 \subsection{Signal Generation}
 
