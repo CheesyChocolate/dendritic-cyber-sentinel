@@ -104,7 +104,7 @@ environments~\cite{vinayakumar2019deep}.
 Inspired by the natural immune system, Artificial Immune Systems
 (AIS) offer a biologically motivated paradigm for anomaly detection.
 Among them, the Dendritic Cell Algorithm (DCA) has garnered attention
-due to its biologically interpretable model of decision-making. The
+due to its biologically interpretable model of decision-making~\cite{greensmith_dendritic_2007}. The
 DCA operates by simulating the behavior of biological dendritic cells
 that respond to environmental signals by producing immune responses.
 It interprets input features as signals—Pathogen-Associated Molecular
@@ -117,7 +117,7 @@ attractive alternative for anomaly detection in cybersecurity.
 
 However, a notable limitation of the classical DCA lies in its
 dependence on manually assigned signal weights and hardcoded
-feature-to-signal mappings. These predefined configurations may not
+feature-to-signal mappings~\cite{mohsin_upper_2016}. These predefined configurations may not
 generalize well across datasets or attack types. They can also
 introduce biases or diminish sensitivity to rare or emerging threats.
 To address these shortcomings, we propose an enhancement to the DCA
@@ -178,7 +178,7 @@ models that mimic the adaptive, distributed, and self-organizing
 behavior of the human immune system. Among various AIS techniques,
 the Dendritic Cell Algorithm (DCA) stands out due to its ability to
 perform context-sensitive anomaly detection. Proposed by Greensmith
-et al., the DCA models the behavior of biological dendritic cells
+et al.~\cite{greensmith_dendritic_2007}, the DCA models the behavior of biological dendritic cells
 which integrate multiple environmental signals to trigger immune responses.
 
 In the DCA, input features are interpreted as immunological
@@ -187,16 +187,16 @@ signals, and Safe signals. A population of artificial dendritic cells
 processes these signals to generate output signals: Costimulatory
 Molecule (CSM), mature signals (mDC), and semi-mature signals (smDC).
 The aggregation of these signals enables the algorithm to infer the
-context of input data as either anomalous or normal.
+context of input data as either anomalous or normal~\cite{greensmith_dca_2008}.
 
 Despite its promising results in binary anomaly detection tasks,
 several limitations have been identified in the traditional DCA.
 Chief among these is its reliance on static and manually assigned
 signal weights, which limits the model's flexibility and adaptability
-to different datasets and use cases. Moreover, traditional
+to different datasets and use cases~\cite{mohsin_upper_2016}. Moreover, traditional
 implementations often use heuristic or arbitrary mappings of features
 to signal categories without a data-driven justification, potentially
-leading to suboptimal performance.
+leading to suboptimal performance~\cite{pinto_towards_2022}.
 
 \subsection{Genetic Algorithms in Anomaly Detection}
 
@@ -226,6 +226,12 @@ of GAs with DCA—particularly for optimizing signal weights based on
 data characteristics—has received limited attention. Most existing
 implementations of DCA continue to rely on fixed weights and
 heuristic rules for feature-to-signal mapping.
+
+Recent advancements include DeepDCA~\cite{aldhaheri_deepdca_2020}, which combines DCA with deep learning techniques
+for IoT attack detection, and Cursory DCA~\cite{pinto_towards_2022}, which addresses the limitations of
+manual signal characterization and real-time analysis capabilities. Additionally, several
+researchers have explored real-time analysis with DCA through segmentation approaches~\cite{gu_integrating_2009},
+and applications to IoT security~\cite{elisa_anomaly_2021}.
 
 Our work addresses this gap by introducing a GA-based framework to
 optimize the signal weights used in the DCA and by proposing a
@@ -412,7 +418,7 @@ for anomaly classification, and (3) GA-based optimization of signal weights.
 The Dendritic Cell Algorithm (DCA) is a biologically inspired
 algorithm that mimics the behavior of natural dendritic cells in
 processing signals to distinguish between safe and dangerous
-contexts. Each artificial dendritic cell (DC) accumulates input
+contexts~\cite{greensmith_dca_2008}. Each artificial dendritic cell (DC) accumulates input
 signals over time and produces outputs that correspond to
 costimulatory molecules (CSM), mature signals (mDC), and semi-mature
 signals (smDC). The final classification is inferred based on the
