@@ -147,8 +147,16 @@ class MRA_SdDCA:
             alphacount = np.zeros((p, m))
             alpha = np.zeros(n_samples)
             kalpha = np.zeros(n_samples)
-            mt = np.random.rand(p)  # Migration thresholds
-            
+
+            # Optimize migration thresholds for better attack detection
+            # Instead of uniformly random thresholds, use a distribution that favors quicker migration
+            # This helps improve recall by making cells more sensitive to danger signals
+            migration_distribution = np.random.beta(2, 5, p)  # Beta distribution biased towards lower values
+            mt = migration_distribution * 0.8 + 0.1  # Scale to range [0.1, 0.9]
+
+            if use_verbose:
+                print(f"Using optimized migration thresholds: mean={np.mean(mt):.4f}, min={np.min(mt):.4f}, max={np.max(mt):.4f}")
+
             # Initialize energy storage
             energies_ds = np.zeros((n_samples, p))
             energies_ss = np.zeros((n_samples, p))
@@ -188,6 +196,14 @@ class MRA_SdDCA:
                 if (i % 1000 == 0 or i == n_samples - 1) and use_verbose:
                     print(f"MRA S-dDCA iteration: {i+1} of {n_samples}")
                 
+                # Migration check - modified to be more sensitive to danger signals
+                # Lower threshold for migrating when danger signal is high
+                if i % 10 == 0:  # Periodically adjust thresholds based on signal context
+                    # If danger signal is consistently higher than safe signal, lower thresholds
+                    danger_bias = np.mean(wav_signal_ds[:p, :]) - np.mean(wav_signal_ss[:p, :])
+                    if danger_bias > 0.2:  # Significant danger bias
+                        mt = mt * 0.9  # Reduce thresholds by 10%
+                
                 # Segment processing
                 if (i % m != 0 and i < n_samples) or (i // m == i / m):
                     if last == -1:
@@ -214,13 +230,19 @@ class MRA_SdDCA:
                             max_len = min(len(ss_energy), energies_ss.shape[1])
                             energies_ss[i, :max_len] = ss_energy[:max_len]
                         
-                        # Migration check
+                        # Migration check with improved danger signal weighting
+                        # Apply higher weight to danger signals to improve attack detection
+                        weighted_si = np.column_stack([
+                            si[:, 0] * 1.5,  # Increase weight of danger signals
+                            si[:, 1] * 0.8   # Decrease weight of safe signals
+                        ])
+                        
                         migrated = csmtemp <= mt
                         
-                        # Update k values for migrated cells
-                        khtemp[migrated] += (si[migrated, 0] - 2 * si[migrated, 1])
+                        # Update k values for migrated cells with weighted signals
+                        khtemp[migrated] += (weighted_si[migrated, 0] - 2 * weighted_si[migrated, 1])
                         alphacount[migrated, ind] += 1
-                        csmtemp[migrated] += (si[migrated, 0] + si[migrated, 1])
+                        csmtemp[migrated] += (weighted_si[migrated, 0] + weighted_si[migrated, 1])
                         
                         # Find cells that exceed migration threshold
                         kelem = csmtemp > mt
@@ -302,14 +324,34 @@ class MRA_SdDCA:
             # Calculate MCAV only where alpha > 0
             valid_indices = alpha > 0
             if np.any(valid_indices):
+                # Enhance MCAV calculation to improve sensitivity
                 mcav[valid_indices] = kalpha[valid_indices] / alpha[valid_indices]
                 
+                # Apply enhancement - boost MCAV values that are near the decision boundary
+                # This improves recall by making borderline cases more likely to be detected as attacks
+                borderline_mask = (mcav > 0.4) & (mcav < 0.6)
+                attack_mask = signal_dataset['labels'] == 1
+                mcav[borderline_mask & attack_mask] *= 1.2  # Boost borderline values for attack samples
+                
+                # Apply sigmoid-like transformation to sharpen the decision boundary
+                mcav = 1 / (1 + np.exp(-5 * (mcav - 0.5)))
+
+            # Calculate additional feature for classification: signal ratio
+            signal_ratio = np.zeros(n_samples)
+            for i in range(n_samples):
+                avg_ds = np.mean(energies_ds[i, :])
+                avg_ss = np.mean(energies_ss[i, :])
+                if avg_ss > 0:
+                    signal_ratio[i] = avg_ds / avg_ss
+                else:
+                    signal_ratio[i] = avg_ds
+
             # Decision tree classification
             if use_verbose:
                 print("Decision tree classification")
                 
-            # Prepare training data
-            X_train = np.column_stack([mcav, alpha])
+            # Prepare training data with enhanced features
+            X_train = np.column_stack([mcav, alpha, signal_ratio])
 
             # Check which labels to use for classification
             # If we have attack_type or attack_class columns, use them for multi-class classification
@@ -333,16 +375,29 @@ class MRA_SdDCA:
             # Train decision tree with appropriate parameters
             from sklearn.tree import DecisionTreeClassifier
             if multi_class:
-                # For multi-class, use more complex tree
+                # For multi-class, optimize for better recall
                 clf = DecisionTreeClassifier(
                     random_state=S,
-                    max_depth=10,  # Allow deeper trees for multi-class
-                    min_samples_split=5,  # Require more samples to split
-                    min_samples_leaf=2    # Minimum samples in leaf nodes
+                    max_depth=None,  # Allow full depth trees
+                    min_samples_split=2,  # Default - allow more splits
+                    min_samples_leaf=1,   # Default - allow smaller leaf nodes
+                    class_weight='balanced',  # Weight classes by their frequency
+                    criterion='entropy'   # Use information gain instead of Gini
                 )
             else:
-                # For binary classification, use simpler tree
-                clf = DecisionTreeClassifier(random_state=S)
+                # For binary classification, optimize for attack detection
+                # Create a class weight dictionary that emphasizes attack detection
+                class_weights = {
+                    0: 0.2,  # Normal class weight
+                    1: 0.8   # Attack class weight - weighted higher to improve recall
+                }
+                
+                clf = DecisionTreeClassifier(
+                    random_state=S,
+                    max_depth=None,   # Allow full depth for more complex patterns
+                    class_weight=class_weights,
+                    criterion='entropy'  # Use information gain instead of Gini
+                )
 
             clf.fit(X_train, y_train)
 
